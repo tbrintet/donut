@@ -17,6 +17,7 @@ DURATION = 10
 
 NUMBER_OF_FRAMES = FPS*DURATION
 
+# Colors of the donut
 R = 0
 G = 255
 B = 0
