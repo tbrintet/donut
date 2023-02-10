@@ -6,14 +6,14 @@ import os
 # https://www.a1k0n.net/2011/07/20/donut-math.html
 
 # Frame size, in px
-HEIGHT = 300
-WIDTH = 300
+HEIGHT = 1080
+WIDTH = 1080
 
 # Number of frames per second
 FPS = 30
 
 # Duration of the video, in seconds
-DURATION = 10
+DURATION = 4
 
 NUMBER_OF_FRAMES = FPS*DURATION
 
@@ -23,14 +23,14 @@ G = 255
 B = 0
 
 # Dimensions of the donut
-R1 = 10
-R2 = 20
+R1 = 30
+R2 = 60
 
-K2 = 50
+K2 = 1000
 K1 = WIDTH*K2*3/(8*(R1+R2))
 
-THETA_SPACING = np.pi/16
-PHI_SPACING = np.pi/32
+THETA_SPACING = np.pi/64
+PHI_SPACING = np.pi/128
 
 A_SPACING = np.pi/32
 B_SPACING = np.pi/64

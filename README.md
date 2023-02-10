@@ -6,6 +6,10 @@ You can go check his website to see the math behind the donut.c code :
 
 https://www.a1k0n.net/2011/07/20/donut-math.html
 
+You can see on youtube a short video of what the script is capable of :
+
+https://www.youtube.com/watch?v=MLknZFG9p3E
+
 
 ## Usage
 
