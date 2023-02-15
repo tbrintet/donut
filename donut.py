@@ -59,6 +59,8 @@ def Rz(theta):
 def generate_image(i):
 	A = i*A_SPACING
 	B = i*B_SPACING
+	RzB = Rz(B)
+	RxA = Rx(A)
 	image = np.zeros((HEIGHT,WIDTH,3),dtype=np.uint8)
 	z_buffer = np.array(np.ones((HEIGHT,WIDTH)) * float('inf')*(-1),dtype=float)
 	for theta in np.arange(0, 2*np.pi, THETA_SPACING):
@@ -68,8 +70,8 @@ def generate_image(i):
 
 		for phi in np.arange(0, 2*np.pi, PHI_SPACING):
 			
-			M = np.matmul(Rz(B), np.matmul(Rx(A), np.matmul(Ry(phi), N)))
-			Q = np.matmul(Rz(B), np.matmul(Rx(A), np.matmul(Ry(phi), P)))
+			M = np.matmul(RzB, np.matmul(RxA, np.matmul(Ry(phi), N)))
+			Q = np.matmul(RzB, np.matmul(RxA, np.matmul(Ry(phi), P)))
 			L = np.dot(M,LIGHT_DIRECTION)
 
 			[x,y,z] = Q
