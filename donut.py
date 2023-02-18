@@ -2,12 +2,17 @@ import moviepy.video.io.ImageSequenceClip
 import numpy as np
 from PIL import Image
 import os
+from math import sin, cos
 
 # https://www.a1k0n.net/2011/07/20/donut-math.html
 
 # Frame size, in px
 HEIGHT = 1080
 WIDTH = 1080
+
+# precomputation
+HEIGHT_2 = HEIGHT//2
+WIDTH_2 = WIDTH//2
 
 # Number of frames per second
 FPS = 30
@@ -44,40 +49,34 @@ if not os.path.isdir(PATH):
 
 
 def Rx(theta):
-	c, s = np.cos(theta), np.sin(theta)
+	c, s = cos(theta), sin(theta)
 	return np.array([[1, 0, 0], [0, c, -s], [0, s, c]])
 
 def Ry(theta):
-	c, s = np.cos(theta), np.sin(theta)
+	c, s = cos(theta), sin(theta)
 	return np.array([[c, 0, s], [0, 1, 0], [-s, 0, c]])
 
 def Rz(theta):
-	c, s = np.cos(theta), np.sin(theta)
+	c, s = cos(theta), sin(theta)
 	return np.array([[c, -s, 0], [s, c, 0], [0, 0, 1]])
 
 
 def generate_image(i):
 	A = i*A_SPACING
 	B = i*B_SPACING
-	RzB = Rz(B)
-	RxA = Rx(A)
+	Rot = Rz(B)@Rx(A)
 	image = np.zeros((HEIGHT,WIDTH,3),dtype=np.uint8)
 	z_buffer = np.array(np.ones((HEIGHT,WIDTH)) * float('inf')*(-1),dtype=float)
 	for theta in np.arange(0, 2*np.pi, THETA_SPACING):
-	
-		P = np.array([R2 + R1*np.cos(theta),R1*np.sin(theta),0])
-		N = np.array([np.cos(theta), np.sin(theta), 0])
-
+		P = np.array([R2 + R1*cos(theta),R1*sin(theta),0])
+		N = np.array([cos(theta), sin(theta), 0])
 		for phi in np.arange(0, 2*np.pi, PHI_SPACING):
-			
-			M = np.matmul(RzB, np.matmul(RxA, np.matmul(Ry(phi), N)))
-			Q = np.matmul(RzB, np.matmul(RxA, np.matmul(Ry(phi), P)))
-			L = np.dot(M,LIGHT_DIRECTION)
+			tmp = Rot@Ry(phi)
+			[x,y,z] = tmp@P
+			L = np.dot(tmp@N, LIGHT_DIRECTION)
 
-			[x,y,z] = Q
-			x_display = HEIGHT//2 - int(K1*y/(K2 + z))
-			y_display = WIDTH//2 + int(K1*x/(K2 + z))
-
+			x_display = HEIGHT_2 - int(K1*y/(K2 + z))
+			y_display = WIDTH_2 + int(K1*x/(K2 + z))
 			if z_buffer[x_display, y_display] <= z:
 				z_buffer[x_display,y_display] = z
 				if (L < 0):
